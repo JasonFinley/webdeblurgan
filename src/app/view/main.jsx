@@ -6,6 +6,7 @@ import { Layout, Menu, Grid } from 'antd';
 import ViewDeblur from './deblur';
 import { Dropdown } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
+import LineQRCode from '../components/lineqr';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { useBreakpoint } = Grid;
@@ -76,6 +77,9 @@ const ViewMain = () => {
                 }}
                 onSelect={ handleOnSelectMenu }
             />
+            <div className='absolute left-1 bottom-2'>
+                <LineQRCode/>
+            </div>
         </Sider>
         <Layout
             style={{background: "#424242ff"}}
