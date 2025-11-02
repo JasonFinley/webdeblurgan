@@ -67,8 +67,8 @@ const AntdUpload = ({setUploadFileObj}) => {
   const [fileList, setFileList] = useState([]); // 僅保存一個檔案
 
   // 🔧 Cloudinary 設定（請改成你的值）
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;       // 例如：clearify
-  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET; // 在 Cloudinary console 建立的 unsigned preset 名稱
+  const cloudName = process.env.CLOUDINARY_CLOUD_NAME;       // 例如：clearify
+  const uploadPreset = process.env.CLOUDINARY_UPLOAD_PRESET; // 在 Cloudinary console 建立的 unsigned preset 名稱
 
   const props = {
     name: 'file',
