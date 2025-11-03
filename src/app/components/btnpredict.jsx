@@ -57,9 +57,12 @@ const BTNPredict = ({imageFileObj, setIsFetching, setPredictObj }) => {
 
     useEffect( () => {
 
+        console.log( "BTNPredict : ", imageFileObj );
         setIsFetching(false)
         if( imageFileObj.url == null ) {
             setIsDisabled( true );
+        }else{
+            setIsDisabled( false );
         }
 
     }, [imageFileObj] );
