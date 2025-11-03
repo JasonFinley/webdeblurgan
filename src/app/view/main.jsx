@@ -18,16 +18,16 @@ const ViewMain = () => {
 
     const items = [{
         key: '1',
-        label : '模糊去噪',
-    },{
-        key: '2',
         label : '畫質修復',
     },{
+//        key: '2',
+//        label : '畫質修復',
+//    },{
         key: '3',
         label : '圖像濾鏡',
     },{
         key: '4',
-        label : '圖片生成',
+        label : '圖片助理',
     }]
 
     const handleOnSelectMenu = (e) => {
