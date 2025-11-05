@@ -35,6 +35,16 @@ const ViewDeblur = () => {
         // name: "random_image",
     } );
 
+    useEffect( () => {
+        setPredictObj({
+            url: null,
+            name: null,
+            width: null,
+            height: null,
+            created_at: null,
+        })
+    }, [upLoadFileObj] )
+
     return <div>
         <AntdUpload
             setUploadFileObj={ setUploadFileObj }
