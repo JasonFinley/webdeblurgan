@@ -9,9 +9,14 @@ import {
   CheckCircleOutlined,
   CloseCircleOutlined,
   DeleteOutlined,
+  PlusOutlined,
 } from '@ant-design/icons';
 
 const { Dragger } = Upload;
+
+// 🔧 Cloudinary 設定（請改成你的值）
+const _CloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;       // 例如：clearify
+const _UploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET; // 在 Cloudinary console 建立的 unsigned preset 名稱
 
 const ItemRender = (originNode, file, fileList, actions) => {
     // 狀態對應顏色與 icon
@@ -66,10 +71,6 @@ const AntdUpload = ({setUploadFileObj}) => {
   const { message } = App.useApp(); // ✅ 改這裡
   const [fileList, setFileList] = useState([]); // 僅保存一個檔案
 
-  // 🔧 Cloudinary 設定（請改成你的值）
-  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;       // 例如：clearify
-  const uploadPreset = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET; // 在 Cloudinary console 建立的 unsigned preset 名稱
-
   const props = {
     name: 'file',
     size: 'large',
@@ -79,10 +80,10 @@ const AntdUpload = ({setUploadFileObj}) => {
     fileList: fileList,
 
     // ✅ 指定 Cloudinary 上傳端點
-    action: `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+    action: `https://api.cloudinary.com/v1_1/${_CloudName}/image/upload`,
     // ✅ 指定上傳時附帶的參數（Cloudinary 需要）
     data: {
-      upload_preset: uploadPreset,
+      upload_preset: _UploadPreset,
     },
     
     itemRender: ItemRender,
@@ -146,6 +147,94 @@ const AntdUpload = ({setUploadFileObj}) => {
         支援單張上傳，禁止上傳公司機密或非法內容。
       </p>
     </Dragger>
+  )
+}
+
+const UploadButton = ( {loading} ) => {
+    return (
+        <button style={{ border: 0, background: 'none', color: "white" }} type="button">
+            {loading ? <LoadingOutlined /> : <PlusOutlined />}
+            <div style={{ marginTop: 8, color: "white" }}>Upload</div>
+        </button>
+    )
+}
+
+export const AntdSmallUpload = ({setUploadFileObj}) => {
+
+  const [imageURL, setImageUrl] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { message } = App.useApp(); // ✅ 改這裡
+  
+  const beforeUpload = (file) => {
+      const isImage = file.type.startsWith('image/');
+      if (!isImage) {
+        message.error('只能上傳圖片！');
+        return Upload.LIST_IGNORE;
+      }
+      const isLt4M = file.size / 1024 / 1024 < 10; // Cloudinary 允許到約100MB
+      if (!isLt4M) {
+        message.error('圖片需小於 10MB！');
+        return Upload.LIST_IGNORE;
+      }
+      return true;
+  }
+
+  const handleChange = (info) => {
+
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === 'uploading') {
+            setIsLoading(true);
+            return;
+      }
+      if (status === 'done') {
+        // ✅ Cloudinary 回傳 response
+        const response = info.file.response;
+        const imageUrl = response?.secure_url;
+        message.success(`${info.file.name} 上傳成功`);
+        console.log('Cloudinary 回傳資料:', response);
+        console.log('圖片網址:', imageUrl);
+        setImageUrl(imageUrl)
+        setIsLoading(false);
+        setUploadFileObj({
+          created_at: response.created_at,
+          asset_id: response.asset_id,
+          format: response.format,
+          public_id: response.public_id,
+          version: response.version,
+          url: response.secure_url,
+          width: response.width,
+          height: response.height,
+          name: response.original_filename,
+        })
+      } else if (status === 'error') {
+        message.error(`${info.file.name} 上傳失敗`);
+      }
+  }
+
+  return (
+    <Upload
+      name="avatar"
+      listType="picture-card"
+      className="avatar-uploader"
+      showUploadList={false}
+      beforeUpload={beforeUpload}
+      onChange={handleChange}
+      // ✅ 指定 Cloudinary 上傳端點
+      action={`https://api.cloudinary.com/v1_1/${_CloudName}/image/upload`}
+      // ✅ 指定上傳時附帶的參數（Cloudinary 需要）
+      data={{
+        upload_preset: _UploadPreset,
+      }}
+    >
+      {imageURL ? (
+        <img draggable={false} src={imageURL} alt="avatar" style={{ width: '100%' }} />
+      ) : (
+        <UploadButton loading={isLoading}/>
+      )}
+    </Upload>
   )
 }
 

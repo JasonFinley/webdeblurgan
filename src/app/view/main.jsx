@@ -7,6 +7,7 @@ import ViewDeblur from './deblur';
 import { Dropdown } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
 import LineQRCode from '../components/lineqr';
+import AIHelp from './aihelp';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { useBreakpoint } = Grid;
@@ -23,9 +24,9 @@ const ViewMain = () => {
 //        key: '2',
 //        label : '畫質修復',
 //    },{
-        key: '3',
-        label : '圖像濾鏡',
-    },{
+//        key: '3',
+//        label : '圖像濾鏡',
+//    },{
         key: '4',
         label : '圖片助理',
     }]
@@ -116,10 +117,15 @@ const ViewMain = () => {
                     </div>
                 }
             </Header>
-            <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+            <Content style={{ 
+                    margin: '24px 16px 0', 
+                    overflow: 'initial'
+                }}
+            >
             <div
                 style={{
                     padding: 24,
+                    height: "100%",
                     minHeight: 360,
                     background: "#061830",
                     borderRadius: 8,
@@ -135,16 +141,21 @@ const ViewMain = () => {
                     ) : selectedKey === '3' ? (
                         <div className='text-2xl text-white'>圖像濾鏡區 - Comming Soon</div>
                     ) : selectedKey === '4' ? (
-                        <div className='text-2xl text-white'>圖片AI生成 - Comming Soon</div>
+                        <div className='h-full w-full text-2xl text-white'>
+                            <AIHelp/>
+                        </div>
                     ) : (
                         <div className='text-2xl text-white'>Comming Soon</div>
                     )
                 }
             </div>
             </Content>
-            <Footer style={{ textAlign: 'center', background: "#424242ff", color: "#ffffff" }}>
-                IT ©{new Date().getFullYear()} Created by AI Clearify Team
-            </Footer>
+            { selectedKey !== '4' ? (
+                <Footer style={{ textAlign: 'center', background: "#424242ff", color: "#ffffff" }}>
+                    IT ©{new Date().getFullYear()} Created by AI Clearify Team
+                </Footer>
+            ) : (<></>)
+            }
         </Layout>
     </Layout>);
 }
