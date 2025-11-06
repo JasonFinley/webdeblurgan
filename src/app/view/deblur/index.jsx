@@ -7,6 +7,7 @@ import { Spin } from "antd";
 import ComparisonImage from "../../components/comparisonimage";
 import BTNDownload from "../../components/btndownload";
 import "./deblur.css";
+import CropImage from "@/app/components/cropimage";
 
 const ViewDeblur = () => {
     
@@ -25,13 +26,13 @@ const ViewDeblur = () => {
         version: null,
         format: null,
         url: null,
-        width: null,
-        height: null,
+        width: 720,
+        height: 1280,
         name: null,
         // format: "jpg",
         // url: "https://picsum.photos/id/1/1280/720",
-        // width: 1280,
-        // height: 720,
+        //width: 1280,
+        //height: 720,
         // name: "random_image",
     } );
 
@@ -62,15 +63,20 @@ const ViewDeblur = () => {
             />
         </div>
         <div className="w-full flex justify-center">
-            <div className="relative w-full max-w-[1024px] h-auto aspect-[4/3] bg-gray-600/50 mx-auto">
+            <div className={`relative w-full bg-gray-600/50 mx-auto ${ upLoadFileObj.width >= upLoadFileObj.height ? " image-comparison-horizontal" : " image-comparison-vertical"}`}>
                 { upLoadFileObj.url && !predictObj.url &&
                     <div className="relative w-full h-full flex justify-center items-center">
-                        <img
+                        <CropImage 
+                            url={ upLoadFileObj.url }
+                            ratio={ upLoadFileObj.width >= upLoadFileObj.height ? (4/3) : (3/4) }
+                            imgProps={{ className: "object-cover w-full h-full" }}
+                        />
+                        {/*<img
                             loading="lazy"
                             src={ upLoadFileObj.url } 
                             alt="Uploaded"
                             className="object-cover w-full h-full"
-                        />
+                        />*/}
                     </div>
                 }
                 {
@@ -86,15 +92,17 @@ const ViewDeblur = () => {
                             </Spin>
                         </div>
                     ) : predictObj.url && (
-                        <div className="absolute left-0 top-0 w-full max-w-[1024px] h-auto aspect-[4/3] bg-black/50 flex justify-center items-center">
-                            {/*<ComparisonImage
-                                imageA={ "https://picsum.photos/id/870/1024/768" }
-                                imageB={ "https://picsum.photos/id/870/1024/768?grayscale&blur=2" }
-                            />*/}
+                    //) : (
+                        <div className={`absolute left-0 top-0 w-full bg-black/50 flex justify-center items-center ${ upLoadFileObj.width >= upLoadFileObj.height ? " image-comparison-horizontal" : " image-comparison-vertical"}`}>
                             <ComparisonImage
+                                isHorizontal={ upLoadFileObj.width >= upLoadFileObj.height }
+                                imageA={ `https://picsum.photos/id/34/${upLoadFileObj.width}/${upLoadFileObj.height}` }
+                                imageB={ `https://picsum.photos/id/34/${upLoadFileObj.width}/${upLoadFileObj.height}?grayscale&blur=2` }
+                            />
+                            {/* <ComparisonImage
                                 imageA={ upLoadFileObj.url }
                                 imageB={ predictObj.url }
-                            />
+                            /> */}
                         </div>
                     )
                 }
