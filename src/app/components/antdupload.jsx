@@ -159,7 +159,7 @@ const UploadButton = ( {loading} ) => {
     )
 }
 
-export const AntdSmallUpload = ({setUploadFileObj}) => {
+export const AntdSmallUpload = ({ setUploadFileObj, isDisabled = false}) => {
 
   const [imageURL, setImageUrl] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -216,6 +216,7 @@ export const AntdSmallUpload = ({setUploadFileObj}) => {
 
   return (
     <Upload
+      disabled={isDisabled}
       name="avatar"
       listType="picture-card"
       className="avatar-uploader"

@@ -52,6 +52,35 @@ const AIHelp = () => {
 
     const [inputText, setInputText] = useState("");
     const messagesEndRef = useRef(null);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const postMessage = async( input_text, image_url ) => {
+        try {
+
+            const tmpData = new FormData();
+            tmpData.append('intput_text', input_text);
+            if (image_url) {
+                // 如果 imageUrl 是有效的網址字串，則 append
+                tmpData.append('file_url', image_url); 
+    }
+
+            const res = await fetch("https://aidemoproject-deblurganv2demo.hf.space/ai_agents", {
+                method: 'POST', // 必須是 POST
+                body: tmpData,  // 直接將 FormData 物件傳給 body
+            })
+
+            const jsonRes = await res.json();
+            return {
+                message : jsonRes.message,
+                image_url: jsonRes.image_url
+            }
+            
+        } catch (error) {
+            console.error("########## postMessage ###########");
+            // 將底層的錯誤重新拋出，讓外部的 .catch() 處理
+            throw error;
+        }
+    }
 
 
     const handleSendMessage = () => {
@@ -81,18 +110,49 @@ const AIHelp = () => {
         } )
 
         setMsgCnt( msgCnt + 2 );
-        setUpLoadFileObj({
-            created_at: null,
-            asset_id: null,
-            public_id: null,
-            version: null,
-            format: null,
-            url: null,
-            width: 1280,
-            height: 960,
-            name: null
+        setIsLoading( true );
+
+        postMessage( inputText, upLoadFileObj.url )
+        .then( (res) => {
+
+            setMessageList( ( pre ) => {
+                const newMsgs = [ ...pre ];
+                if( res.image_url ){
+                    newMsgs.push({
+                        id: `AI-${cnt}`,
+                        who: "AI",
+                        type: "IMAGE",
+                        value: res.image_url
+                        //value: "https://picsum.photos/1280/720"
+                    })
+                }
+
+                newMsgs.push({
+                    id: `AI-${cnt + 1}`,
+                    who: "AI",
+                    type: "TEXT",
+                    value: res.message
+                })
+                return newMsgs
+            } )
+
+        } )
+        .catch( (e) => { console.log("postMessage : ", e) } )
+        .finally( () => {
+            setIsLoading( false );
+            setInputText("");
+            setUpLoadFileObj({
+                created_at: null,
+                asset_id: null,
+                public_id: null,
+                version: null,
+                format: null,
+                url: null,
+                width: 1280,
+                height: 960,
+                name: null
+            } );
         } );
-        setInputText("");
     }
 
     useEffect(() => {
@@ -119,7 +179,7 @@ const AIHelp = () => {
                 <div ref={messagesEndRef} />
             </div>
             <div className="fixed bottom-4 w-2/3 h-28 px-2 rounded-xl bg-black flex justify-center items-center">
-                <AntdSmallUpload setUploadFileObj={ setUpLoadFileObj } />
+                <AntdSmallUpload setUploadFileObj={ setUpLoadFileObj } isDisabled={isLoading}/>
                 <Input
                     value={inputText}
                     placeholder={"請輸入文字..."}
@@ -141,7 +201,7 @@ const AIHelp = () => {
                         width: "72px",
                         height: "72px"
                     }}
-                    disabled={ inputText.length <= 0 }
+                    disabled={ inputText.length <= 0 || isLoading }
                     onClick={ handleSendMessage }
                 >送出</Button>
             </div>
