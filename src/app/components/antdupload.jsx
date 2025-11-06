@@ -1,7 +1,7 @@
 "use client"
 import '@ant-design/v5-patch-for-react-19';
 import React, { useState } from 'react';
-import { App, message, Upload } from 'antd';
+import { App, Upload } from 'antd';
 import {
   InboxOutlined,
   FileOutlined,
