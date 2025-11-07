@@ -41,7 +41,7 @@ const ComparisonImage = ({ imageA, imageB, isHorizontal }) => {
             if( sliderIcon ) sliderIcon.style.left = value;
         });
 
-        return () => { slider.removeEventListener("input") }
+        //return () => { slider.removeEventListener("input") }
 
     }, [isHorizontal] );
 
