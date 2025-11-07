@@ -58,18 +58,21 @@ const AIHelp = () => {
         try {
 
             const tmpData = new FormData();
-            tmpData.append('intput_text', input_text);
+            tmpData.append('input_text', input_text);
             if (image_url) {
                 // 如果 imageUrl 是有效的網址字串，則 append
                 tmpData.append('file_url', image_url); 
-    }
+            }
 
-            const res = await fetch("https://aidemoproject-deblurganv2demo.hf.space/ai_agents", {
+            console.log( tmpData )
+
+            const res = await fetch("https://aidemoproject-deblurganv2demo.hf.space/ai_agent", {
                 method: 'POST', // 必須是 POST
                 body: tmpData,  // 直接將 FormData 物件傳給 body
             })
-
+            console.log( res )
             const jsonRes = await res.json();
+            console.log( jsonRes )
             return {
                 message : jsonRes.message,
                 image_url: jsonRes.image_url

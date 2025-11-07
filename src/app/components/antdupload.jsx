@@ -217,7 +217,6 @@ export const AntdSmallUpload = ({ setUploadFileObj, isDisabled = false}) => {
   return (
     <Upload
       disabled={isDisabled}
-      name="avatar"
       listType="picture-card"
       className="avatar-uploader"
       showUploadList={false}

@@ -94,15 +94,16 @@ const ViewDeblur = () => {
                     ) : predictObj.url && (
                     //) : (
                         <div className={`absolute left-0 top-0 w-full bg-black/50 flex justify-center items-center ${ upLoadFileObj.width >= upLoadFileObj.height ? " image-comparison-horizontal" : " image-comparison-vertical"}`}>
-                            <ComparisonImage
+                            {/*<ComparisonImage
                                 isHorizontal={ upLoadFileObj.width >= upLoadFileObj.height }
                                 imageA={ `https://picsum.photos/id/34/${upLoadFileObj.width}/${upLoadFileObj.height}` }
                                 imageB={ `https://picsum.photos/id/34/${upLoadFileObj.width}/${upLoadFileObj.height}?grayscale&blur=2` }
-                            />
-                            {/* <ComparisonImage
+                            />*/}
+                            {<ComparisonImage
+                                isHorizontal={ upLoadFileObj.width >= upLoadFileObj.height }
                                 imageA={ upLoadFileObj.url }
                                 imageB={ predictObj.url }
-                            /> */}
+                            />}
                         </div>
                     )
                 }
