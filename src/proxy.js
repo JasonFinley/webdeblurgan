@@ -19,29 +19,39 @@ function getLocale(request) {
   return locales.includes(lang) ? lang : defaultLocale
 }
 
-export function middleware(request) {
-  const pathname = request.nextUrl.pathname
+export function proxy(request) {
+  const { pathname } = request.nextUrl
+  /**
+   * 1️⃣ 排除不該處理的路徑
+   */
+  if (
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/_next') ||
+    pathname === '/favicon.ico' ||
+    /\.(png|jpg|jpeg|svg|gif|webp|ico)$/i.test(pathname)
+  ) {
+    return NextResponse.next()
+  }
 
-  // 已經有語系在路徑中就放行
+  /**
+   * 2️⃣ 如果路徑已包含語系，直接放行
+   */
   const pathnameHasLocale = locales.some(
-    (locale) =>
-      pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
+    (locale) => pathname === `/${locale}` || pathname.startsWith(`/${locale}/`)
   )
 
   if (pathnameHasLocale) {
     return NextResponse.next()
   }
 
+  /**
+   * 3️⃣ 判斷語系並 redirect
+   */
   const locale = getLocale(request)
 
-  // 導向 /zh /en
-  request.nextUrl.pathname = `/${locale}${pathname}`
-  return NextResponse.redirect(request.nextUrl)
+  const url = request.nextUrl.clone()
+  url.pathname = `/${locale}${pathname}`
+
+  return NextResponse.redirect(url)
 }
 
-export const config = {
-  matcher: [
-    // 排除 API、靜態資源
-    '/((?!api|_next|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico)$).*)',
-  ],
-}
