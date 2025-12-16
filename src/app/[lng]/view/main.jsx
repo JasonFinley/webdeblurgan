@@ -6,20 +6,23 @@ import { Layout, Menu, Grid } from 'antd';
 import ViewDeblur from './deblur';
 import { Dropdown } from 'antd';
 import { MoreOutlined } from '@ant-design/icons';
-import LineQRCode from '../components/lineqr';
+import LineQRCode from '../../components/lineqr';
 import AIHelp from './aihelp';
+import { useTranslation } from 'react-i18next';
+import { MdTranslate } from "react-icons/md";
 
 const { Header, Content, Footer, Sider } = Layout;
 const { useBreakpoint } = Grid;
 
 const ViewMain = () => {
 
+    const {t, i18n} = useTranslation();
     const [selectedKey, setSelectedKey] = useState('1');
     const screens = useBreakpoint();
 
     const items = [{
         key: '1',
-        label : '畫質修復',
+        label : t('main_deblur'),
     },{
 //        key: '2',
 //        label : '畫質修復',
@@ -28,12 +31,17 @@ const ViewMain = () => {
 //        label : '圖像濾鏡',
 //    },{
         key: '4',
-        label : '圖片助理',
+        label : t('main_helper'),
     }]
 
     const handleOnSelectMenu = (e) => {
         console.log('click ', e.key);
         setSelectedKey( e.key );
+    }
+
+    const handleChangeLangeage = () => {
+        //console.log( "i18n", i18n );
+        i18n.changeLanguage( i18n.language === 'en' ? 'zh-TW' : 'en' );
     }
 
     return (
@@ -54,7 +62,6 @@ const ViewMain = () => {
         >
             <div className='w-full h-32 bg-[#061830] flex justify-center items-center'>
                 <Image
-                    priority
                     unoptimized 
                     height={96} 
                     width={128} 
@@ -87,34 +94,41 @@ const ViewMain = () => {
         >
             <Header style={{ padding: 0, background: "#061830" }}>
                 {   
-                    screens.xs && <div
-                        className='flex justify-between items-center'
-                    >
-                        <Image
-                            priority
-                            unoptimized 
-                            height={64} 
-                            width={128} 
-                            src={"/clearify_logo.png"} 
-                            alt="Clearify LOGO"
-                            style={{ 
-                                width: '128px', 
-                                height: '64px', 
-                                objectFit: 'contain' 
-                            }}
-                        />
-                        <Dropdown
-                            menu={ {
-                                items,
-                                className: 'custom-dropdown-menu',
-                                onClick: handleOnSelectMenu
-                            } }
-                            trigger={['click']}
-                            
+                        screens.xs ? (<div
+                            className='flex justify-between items-center'
                         >
-                            <MoreOutlined style={{ fontSize: 36, color: '#ffffffe0', marginRight: "4px" }}/>
-                        </Dropdown>
-                    </div>
+                            <Image
+                                priority
+                                unoptimized 
+                                height={64} 
+                                width={128} 
+                                src={"/clearify_logo.png"} 
+                                alt="Clearify LOGO"
+                                style={{ 
+                                    width: '128px', 
+                                    height: '64px', 
+                                    objectFit: 'contain' 
+                                }}
+                            />
+                            <Dropdown
+                                menu={ {
+                                    items,
+                                    className: 'custom-dropdown-menu',
+                                    onClick: handleOnSelectMenu
+                                } }
+                                trigger={['click']}
+                                
+                            >
+                                <MoreOutlined style={{ fontSize: 36, color: '#ffffffe0', marginRight: "4px" }}/>
+                            </Dropdown>
+                        </div>) : (<div className='h-16 text-2xl text-white flex justify-end items-center pr-4'>
+                            <button 
+                                className='w-12 h-12 text-2xl text-white flex justify-center items-center'
+                                onClick={ handleChangeLangeage }
+                            >
+                                <MdTranslate/>
+                            </button>
+                        </div>)
                 }
             </Header>
             <Content style={{ 

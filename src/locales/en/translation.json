@@ -1,0 +1,14 @@
+{
+    "coming_soon": "Coming Soon",
+    "home": "Home",
+    "deblur_image": "Deblur Image",
+    "upload_image": "Upload Image",
+    "select_image": "Select Image",
+    "drag_drop_image": "Drag and drop image here, or click to select image",
+    "processing": "processing",
+    "download_image": "Download",
+    "language": "language",
+    "select_language": "language selection",
+    "main_deblur": "Deblur",
+    "main_helper": "Helper"
+}

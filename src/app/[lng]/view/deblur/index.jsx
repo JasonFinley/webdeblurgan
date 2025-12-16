@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import AntdUpload from "../../components/antdupload";
-import BTNPredict from "../../components/btnpredict";
+import AntdUpload from "../../../components/antdupload";
+import BTNPredict from "../../../components/btnpredict";
 import { Spin } from "antd";
-import ComparisonImage from "../../components/comparisonimage";
-import BTNDownload from "../../components/btndownload";
+import ComparisonImage from "../../../components/comparisonimage";
+import BTNDownload from "../../../components/btndownload";
 import "./deblur.css";
 import CropImage from "@/app/components/cropimage";
 
